@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: second-app
+#    the selector in serivce is used to define the pods we want to expose, we dont have to add a tier if we want all the pods in second-app to be used
+#    if we want only a specific pod type we can add the tier below the app like we did in deployment
+  ports:
+    - protocol: 'TCP'
+      port: 80
+#     port is the outside port
+      targetPort: 8080
+#     targetPort is the port inside the container
+  type: LoadBalancer
+#   loadbalancer gives you outside world access and incoming traffic is distributed equally
+
+
+
+
+

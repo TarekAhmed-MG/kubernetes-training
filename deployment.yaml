@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: second-app
+      tier: backend
+#      because kubernetes deployments are dynamic objects we need to tell the deployment which pods belong to it as we could have multiple pods doing different things
+  template:
+    metadata:
+      labels:
+        app: second-app
+        tier: backend
+    spec:
+      containers:
+        - name: second-node
+          image: tarekahmed97/kub-first-app
+          imagePullPolicy: Always
+#          kubernetes usually doesnt pull an image if the tag doesnt change but by setting imagepullpolicy to always it does
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 10
+            initialDelaySeconds: 5
+#            livenessProbe checks if your pods are healthy or not
+#             path is the path to file, port is the container exposed port, periodseconds is how often you want it to run and
+#             initial delay is how long it should wait before checking health for the first time
+#        - name: ...
+#          image: ...
+#        - name: ...
+#          image: ...
+
+
+#  replicas is the number of pods
+#  template defines the pods that should be deployed in imperative we used --image=x,x2,x3 (so can add multiple images for multiple containers)
+#   pods are an object so we need to add metadata and we dont need to add kind as templates are always pods
+
+# first spec is the configuration of the overall deployment and the second spec inside is how the individual pod should be configured
+# its only one pod type per deployment if you want more types you need more deployments
+# spec is the specification, it is the meat of the document and holds all the information of what would need to be deployed
+
