@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: story
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: tarekahmed97/kub-data-demo:1
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+#              when you create a volume, you add the volume Mounts to the containers to connect them
+      volumes:
+        - name: story-volume
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+#         instead of emptyDir we can use hostpath which makes the volume on the node itself so multiple pods can use the same volume
+#         removing the issue emptyDir had as its pod specific. its good if you use more than one replica (this is for single node and testing only)
+
+#          emptyDir: {}
+##          emptyDir type allows you to create a volume with default configurations and creates a new empty directory
+##           each time a pod is created where containers can read/write, and data persists if containers deleted but will
+##           be deleted if a pod is deleted.
